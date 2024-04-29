@@ -15,3 +15,17 @@ services:
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_HOST_NAME: localhost 
+   producer:
+    build: ./producer
+    depends_on:
+      - kafka
+
+  consumer:
+    build: ./consumer
+    depends_on:
+      - kafka
+
+  pyspark:
+    build: ./pyspark
+    depends_on:
+      - kafka
