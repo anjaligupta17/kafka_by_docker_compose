@@ -20,6 +20,11 @@ docker build -t pyspark-app .
 docker run --network="your_network_name" pyspark-app
 Replace your_network_name with the name of the Docker network where Kafka is running.
 -------------------------------------
+For this part:-'--network="your_network_name"'
+
+1.docker network ls
+2.docker network create my-network
+3.docker run --network=my-network pyspark-app
 
 
 
