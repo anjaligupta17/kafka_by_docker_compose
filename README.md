@@ -14,3 +14,12 @@ Free Public APIs for Developers & Free Alternatives List
 Apipheny
 https://apipheny.io › free-api
 
+------------------------------------
+(same for other)
+docker build -t pyspark-app .
+docker run --network="your_network_name" pyspark-app
+Replace your_network_name with the name of the Docker network where Kafka is running.
+-------------------------------------
+
+
+
