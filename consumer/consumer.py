@@ -1,8 +1,7 @@
-
 from confluent_kafka import Consumer, KafkaError
 
 # Kafka configuration
-kafka_bootstrap_servers = 'localhost:9092'
+kafka_bootstrap_servers = 'kafka:9092'  # Use service name 'kafka' instead of localhost
 kafka_topic = 'work'
 
 # Kafka Consumer configuration
@@ -16,6 +15,9 @@ consumer_conf = {
 consumer = Consumer(consumer_conf)
 consumer.subscribe([kafka_topic])
 
+# List to store consumed messages
+consumed_messages = []
+
 # Main loop to consume messages
 try:
     while True:
@@ -23,13 +25,22 @@ try:
         if msg is None:
             continue
         if msg.error():
-            if msg.error().code() == KafkaError._PARTITION_EOF:
+            error_code = msg.error().code()
+            # Handle specific error codes here (e.g., handle PARTITION_EOF differently)
+            if error_code == KafkaError._PARTITION_EOF:
                 continue
             else:
-                print(msg.error())
-                break
+                # Log the error for further investigation
+                print(f"Error consuming message: {msg.error()}")
+                # Consider retrying or taking other actions based on the error
+        consumed_messages.append(msg.value().decode("utf-8"))
         print(f'Received message: {msg.value().decode("utf-8")}')
 except KeyboardInterrupt:
     pass
 finally:
     consumer.close()
+
+# Print the consumed messages
+print("Consumed messages:")
+for message in consumed_messages:
+    print(message)
