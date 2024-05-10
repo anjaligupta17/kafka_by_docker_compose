@@ -1,11 +1,10 @@
-
 from kafka import KafkaProducer
 import requests
 import json
 
 # Kafka configuration
-bootstrap_servers = 'PLAINTEXT://localhost:9092'
-topic = 'work'
+kafka_topic = 'work'  # Define Kafka topic
+kafka_brokers = ['localhost:9092']  # Define Kafka brokers
 
 # Function to fetch data from the API
 def fetch_data():
@@ -14,15 +13,20 @@ def fetch_data():
     return json.dumps(data)
 
 # Create Kafka producer
-producer = KafkaProducer(bootstrap_servers=['localhost:9092'],
-              api_version=(0,11,5),
-              value_serializer=lambda x: dumps(x).encode('utf-8'))
+kafka_producer = KafkaProducer(bootstrap_servers=kafka_brokers,
+                               api_version=(0, 11, 5))
 
 # Main function to produce data to Kafka topic
 def produce_to_kafka():
     while True:
-        data = fetch_data()
-        producer.send(topic, data.encode('utf-8'))
+        try:
+            data = fetch_data()
+            kafka_producer.send(kafka_topic, data.encode('utf-8'))
+            kafka_producer.flush()
+            print("Data sent successfully")
+        except Exception as e:
+            print(f"Error: {e}")
+            # Handle the error here as needed
 
 # Run the producer
 if __name__ == '__main__':
