@@ -3,12 +3,12 @@ from confluent_kafka import Consumer, KafkaError
 
 # Kafka configuration
 kafka_bootstrap_servers = 'localhost:9092'
-kafka_topic = 'your_topic_name'
+kafka_topic = 'work'
 
 # Kafka Consumer configuration
 consumer_conf = {
     'bootstrap.servers': kafka_bootstrap_servers,
-    'group.id': 'your_consumer_group_id',
+    'group.id': 'my_unique_consumer_group_id',
     'auto.offset.reset': 'earliest'
 }
 

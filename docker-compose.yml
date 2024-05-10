@@ -11,21 +11,21 @@ services:
     image: wurstmeister/kafka
     container_name: kafka
     ports:
-      - 9092:9092  
+      - "9092:9092"  
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_HOST_NAME: localhost 
-   producer:
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    depends_on:
+      - zookeeper
+
+  producer:
     build: ./producer
     depends_on:
       - kafka
+  
 
   consumer:
     build: ./consumer
-    depends_on:
-      - kafka
-
-  pyspark:
-    build: ./pyspark
     depends_on:
       - kafka

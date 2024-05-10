@@ -1,8 +1,7 @@
-
 FROM python:3.9
 
 # Install Kafka client library
-RUN pip install kafka-python
+RUN pip install confluent-kafka
 
 # Set the working directory inside the container
 WORKDIR /app
