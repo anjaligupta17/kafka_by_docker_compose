@@ -2,7 +2,7 @@ from confluent_kafka import Consumer, KafkaError
 
 # Kafka configuration
 kafka_bootstrap_servers = 'kafka:9092'  # Use service name 'kafka' instead of localhost
-kafka_topic = 'work'
+kafka_topic = 'test_topic'
 
 # Kafka Consumer configuration
 consumer_conf = {
@@ -15,32 +15,31 @@ consumer_conf = {
 consumer = Consumer(consumer_conf)
 consumer.subscribe([kafka_topic])
 
-# List to store consumed messages
-consumed_messages = []
+# File to store consumed messages
+output_file = 'consumed_messages.txt'
 
 # Main loop to consume messages
 try:
-    while True:
-        msg = consumer.poll(1.0)
-        if msg is None:
-            continue
-        if msg.error():
-            error_code = msg.error().code()
-            # Handle specific error codes here (e.g., handle PARTITION_EOF differently)
-            if error_code == KafkaError._PARTITION_EOF:
+    with open(output_file, 'a') as f:
+        while True:
+            msg = consumer.poll(10.0)
+            if msg is None:
                 continue
-            else:
-                # Log the error for further investigation
-                print(f"Error consuming message: {msg.error()}")
-                # Consider retrying or taking other actions based on the error
-        consumed_messages.append(msg.value().decode("utf-8"))
-        print(f'Received message: {msg.value().decode("utf-8")}')
+            if msg.error():
+                error_code = msg.error().code()
+                # Handle specific error codes here (e.g., handle PARTITION_EOF differently)
+                if error_code == KafkaError._PARTITION_EOF:
+                    continue
+                else:
+                    # Log the error for further investigation
+                    print(f"Error consuming message: {msg.error()}")
+                    # Consider retrying or taking other actions based on the error
+            consumed_message = msg.value().decode("utf-8")
+            f.write(consumed_message + '\n')
+            print(f'Received message: {consumed_message}')
 except KeyboardInterrupt:
     pass
 finally:
     consumer.close()
 
-# Print the consumed messages
-print("Consumed messages:")
-for message in consumed_messages:
-    print(message)
+print(f"Consumed messages are saved to {output_file}")

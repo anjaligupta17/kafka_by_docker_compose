@@ -1,13 +1,15 @@
-FROM python:3.9
+# Use an official Python runtime as a parent image
+FROM python:3.8-slim
 
-# Install Kafka client library
-RUN pip install confluent-kafka
-
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the consumer application code into the container
-COPY consumer.py .
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Command to run the consumer application when the container starts
+# Install any needed dependencies specified in requirements.txt
+RUN pip install confluent-kafka
+
+# Run consumer.py when the container launches
 CMD ["python", "consumer.py"]
+

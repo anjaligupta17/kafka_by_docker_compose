@@ -1,14 +1,14 @@
-# Use the official Python base image
-FROM python:3.9
+# Use an official Python runtime as a parent image
+FROM python:3.8-slim
 
-# Install Kafka client library and requests module
-RUN pip install kafka-python requests
-
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the producer application code into the container
-COPY producer.py /app/
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Command to run the producer application when the container starts
+# Install any needed dependencies specified in requirements.txt
+RUN pip install --no-cache-dir kafka-python requests
+
+# Run producer.py when the container launches
 CMD ["python", "producer.py"]
