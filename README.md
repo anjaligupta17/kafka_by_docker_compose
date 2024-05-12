@@ -1,33 +1,49 @@
 # kafka_by_docker_compose
 #producer
 #consumer
+--------------------------------------------
+Without Code Work ->>>>
 
-kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic your_topic_name
+topic create:-
 
-----------------------------------
-Free Public APIs for Developers & Free Alternatives List
+kafka-topic.sh --create --zookeeper zookeeper:2181  --replication-factor 1 --partitions 1 --topic work
 
+or
 
-1.https://rapidapi.com › collection › list-of-free-apis
-2.Free API - 90+ Public APIs For Testing [No Key]
+kafka-topics.sh --create --topic mytopic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
-Apipheny
-https://apipheny.io › free-api
+produce command:-
 
-------------------------------------
-(same for other)
-docker build -t pyspark-app .
-docker run --network="your_network_name" pyspark-app
-Replace your_network_name with the name of the Docker network where Kafka is running.
--------------------------------------
-For this part:-'--network="your_network_name"'
+kafka-console-producer.sh --topic work --bootstrap-server localhost:9092
 
-1.docker network ls
-2.docker network create my-network
-3.docker run --network=my-network pyspark-app
+consumer command:-
+
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic mytopic --from-beginning
+
+That's it! You've now installed Kafka using Docker. You can stop Kafka and Zookeeper by running docker-compose down in the same directory where your docker-compose.yml file is located.
+
+Extra --
+2.cd /opt/bitnami/kafka/bin
+3.list of topic - /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+4.create topic - /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic work --partitions 1 --replication-factor 1
+5.describe topic - /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic work
 
 ----------------------------------------------
+With Code Work ->>>>
 
+docker-compose build
+docker-compose up -d
+
+For stopping container -
+doecker-compose down
+
+All container delete - 
+docker rm -f $(docker ps -aq)
+
+All image delete -
+docker rmi -f $(docker images -q)
+---------------------------------------------------
+For authentication for production (learning points)
 zookeeper:
   image: bitnami/zookeeper
   ports:
