@@ -26,5 +26,18 @@ For this part:-'--network="your_network_name"'
 2.docker network create my-network
 3.docker run --network=my-network pyspark-app
 
+----------------------------------------------
+
+zookeeper:
+  image: bitnami/zookeeper
+  ports:
+    - "2181:2181"
+  environment:
+    - ZOO_ENABLE_AUTHENTICATION=true
+    - ZOO_SERVER_USERS=<username>:<password>
+  volumes:
+    - ./zookeeper/data:/bitnami/zookeeper/data
+
+
 
 
