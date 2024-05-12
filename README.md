@@ -31,11 +31,11 @@ Extra --
 ----------------------------------------------
 With Code Work ->>>>
 
-docker-compose build
+docker-compose build,
 docker-compose up -d
 
 For stopping container -
-doecker-compose down
+docker-compose down
 
 All container delete - 
 docker rm -f $(docker ps -aq)
