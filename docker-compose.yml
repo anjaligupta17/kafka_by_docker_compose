@@ -35,3 +35,14 @@ services:
     build: ./consumer
     depends_on:
       - kafka
+  spark:
+    image: bitnami/spark
+    ports:
+      - "4040:4040"
+    volumes:
+      - ./spark/app:/opt/bitnami/spark/work-dir
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    depends_on:
+      - kafka
+
