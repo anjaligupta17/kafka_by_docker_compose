@@ -26,5 +26,8 @@ COPY . /app
 # Expose port for Spark UI
 EXPOSE 4040
 
+# Install Kafka dependencies
+RUN pip3 install kafka-python
+
 # Run your PySpark application
-CMD ["spark-submit", "--master", "local[*]", "your_script.py"]
+CMD ["spark-submit", "--master", "local[*]", "--packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0", "your_script.py"]
