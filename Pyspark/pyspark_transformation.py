@@ -8,7 +8,7 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 # Define the Kafka topic to subscribe to
-kafka_topic = "your_topic_name"
+kafka_topic = "test_topic"
 
 # Define the schema for the incoming Kafka messages
 schema = StructType().add("key", StringType()).add("value", StringType())
