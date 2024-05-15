@@ -1,20 +1,37 @@
-# Use the official Airflow image from Docker Hub
-FROM apache/airflow:latest
+# Use an official Python runtime as a parent image
+FROM python:3.8-slim
 
-# Set the working directory inside the container
-WORKDIR /usr/local/airflow
+# Set environment variables
+ENV AIRFLOW_HOME=/opt/airflow
+ENV AIRFLOW__CORE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow.db
+ENV AIRFLOW__CORE__EXECUTOR=LocalExecutor
+ENV AIRFLOW__CORE__LOAD_EXAMPLES=False
 
-# Install any additional Python packages if needed
-# For example:
-# RUN pip install <package-name>
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y \
+        curl \
+        default-libmysqlclient-dev \
+        libkrb5-dev \
+        libsasl2-dev \
+        libssl-dev \
+        libffi-dev \
+        libpq-dev \
+        && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Copy the DAGs, logs, and plugins directories from the host into the container
-COPY ./dags /usr/local/airflow/dags
-COPY ./logs /usr/local/airflow/logs
-COPY ./plugins /usr/local/airflow/plugins
+# Install Apache Airflow with extras
+RUN pip install 'apache-airflow[celery,crypto,jdbc,mysql,postgres,ssh,statsd]==2.2.0'
 
-# Expose the Airflow webserver port
+# Initialize Airflow database
+RUN airflow db init
+
+# Create a directory for logs and dags
+RUN mkdir -p /opt/airflow/logs && mkdir -p /opt/airflow/dags
+
+# Expose the port for Airflow webserver
 EXPOSE 8080
 
-# Start the Airflow webserver when the container starts
-CMD ["webserver"]
+# Start Airflow webserver
+CMD ["airflow", "webserver", "--port", "8080"]
